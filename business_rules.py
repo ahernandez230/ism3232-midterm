@@ -35,3 +35,22 @@ def calculate_event_total(
     if total <= SERVICE_FEE_LIMIT:
         total += SERVICE_FEE
     return total
+
+
+def needs_signoff(total: float) -> bool:
+    """Return True if the total cost for an event exceeds the signoff limit, otherwise return False"""
+    return total > SIGNOFF_LIMIT
+
+
+def needs_second_chef(guests: int, total: float) -> bool:
+    """Return True if the event requires a second chef based on the number of guests and total cost"""
+    return guests > SECOND_CHEF_GUEST_LIMIT or total >= SECOND_CHEF_TOTAL_LIMIT
+
+
+def format_event_line(
+    client: str, total: float, signoff: bool, second_chef: bool
+) -> str:
+    """Return a formatted string for an event line in the report"""
+    signoff_text = "yes" if signoff else "no"
+    second_chef_text = "yes" if second_chef else "no"
+    return f"{client}: ${total:.2f} | sign-off: {signoff_text} | second chef: {second_chef_text}"
