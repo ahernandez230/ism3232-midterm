@@ -5,6 +5,8 @@ from business_rules import (
     get_event_discount,
     needs_second_chef,
     needs_signoff,
+    total_booked,
+    largest_event,
 )
 
 
@@ -90,3 +92,21 @@ def test_line_shows_yes_for_both_true():
         format_event_line("Hilltop Gym", 3420.00, True, True)
         == "Hilltop Gym: $3420.00 | sign-off: yes | second chef: yes"
     )
+
+
+def test_total_booked_adds_all_event_totals():
+    events = [
+        {"client": "Finch Law", "guest_price": 18.00, "guests": 20, "nonprofit": False},
+        {"client": "Garden Club", "guest_price": 22.00, "guests": 40, "nonprofit": True},
+    ]
+    assert round(total_booked(events), 2) == 1271.00
+
+def test_largest_event_tie_returns_first_in_list():
+    events = [
+       {"client": "First", "guest_price": 10.00, "guests": 100, "nonprofit": False},
+         {"client": "Second", "guest_price": 20.00, "guests": 50, "nonprofit": False},
+    ]
+    assert largest_event(events) == "First"
+
+def test_largest_event_of_empty_list_is_empty_string():
+    assert largest_event([ ]) == ""
