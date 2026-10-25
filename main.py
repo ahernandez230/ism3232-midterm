@@ -1,8 +1,10 @@
 from business_rules import (
     calculate_event_total,
     format_event_line,
+    largest_event,
     needs_second_chef,
     needs_signoff,
+    total_booked,
 )
 
 events = [
@@ -18,6 +20,9 @@ events = [
 
 
 print("Harvest Catering Event Report")
+event_count = 0
+signoff_count = 0
+second_chef_count = 0
 for event in events:
     total = calculate_event_total(
         event["guest_price"], event["guests"], event["nonprofit"]
@@ -25,3 +30,17 @@ for event in events:
     signoff = needs_signoff(total)
     second_chef = needs_second_chef(event["guests"], total)
     print(format_event_line(event["client"], total, signoff, second_chef))
+    event_count += 1
+    if signoff:
+        signoff_count += 1
+    if second_chef:
+        second_chef_count += 1
+
+
+total = total_booked(events)
+print(f"Events: {event_count}")
+print(f"Total booked: ${total:.2f}")
+print(f"Average event total: ${total / event_count:.2f}")
+print(f"Largest event total: {largest_event(events)}")
+print(f"Sign-offs needed: {signoff_count}")
+print(f"Second chefs needed: {second_chef_count}")
